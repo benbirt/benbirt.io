@@ -8,6 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -39,8 +40,8 @@ jobs:
         with:
           bazelisk-cache: true
           repository-cache: true
-      # A pull request opened with the workflow's own token does not start the
-      # Pages workflow, so the site is built with the new Zola here.
+      # Builds with the new Zola before proposing it, which also brings
+      # MODULE.bazel.lock up to date for the commit.
       - if: steps.update.outputs.changed == 'true'
         run: bazel build //site:public
       - if: steps.update.outputs.changed == 'true'
@@ -59,3 +60,7 @@ jobs:
           else
             gh pr edit update-zola --title "$title" --body "$body"
           fi
+          # A pull request opened with the workflow's own token does not start
+          # the Pages workflow, whose build main requires. Starting it by hand
+          # on the branch is allowed, and reports on the same commit.
+          gh workflow run pages.yml --ref update-zola
