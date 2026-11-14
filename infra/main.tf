@@ -3,8 +3,10 @@
 # requests and applies on pushes to main (.github/workflows/infra.yml).
 #
 # Credentials and private values come from the environment:
-#   CLOUDFLARE_API_TOKEN                       a token limited to this zone (README.md lists its permissions)
-#   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY   the R2 token for the state bucket
+#   CLOUDFLARE_API_TOKEN                       the one Cloudflare token (README.md): the zone and the
+#                                              state bucket
+#   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY   the state bucket's S3 keys, derived from that token
+#                                              by tools/r2-keys.sh
 #   TF_VAR_forward_to                          the mailbox that ben@benbirt.io forwards to
 # Locally (on termina, with the keys in KDE Wallet): infra/run.sh plan
 

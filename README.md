@@ -44,14 +44,28 @@ CI plans on pull requests that change `infra/` and applies on pushes to `main`
 ([`infra.yml`](.github/workflows/infra.yml)). State is in the Cloudflare R2
 bucket `benbirt-io-tofu-state`.
 
-The workflow reads four repository secrets (and Dependabot secrets of the same
-names, for its provider updates):
+One Cloudflare token serves all of it: an account-owned API token,
+`benbirt-io-tofu` (Manage account > Account API tokens), with three policies:
 
-| Secret | What it is |
+| Scope | Permissions |
 | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | A Cloudflare API token for the `benbirt.io` zone, with Zone: Read, DNS: Edit and Email Routing Rules: Edit on the zone, and Email Routing Addresses: Edit on the account |
-| `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | An R2 token with Object Read & Write on the state bucket only |
-| `FORWARD_TO` | The mailbox that `ben@benbirt.io` forwards to |
+| The `benbirt.io` zone | Zone: Read, DNS: Edit, Email Routing Rules: Edit |
+| The account | Email Routing Addresses: Edit |
+| The R2 bucket `benbirt-io-tofu-state` | Object Read & Write |
+
+The `cloudflare` provider uses the token as it is. For the state bucket,
+[`tools/r2-keys.sh`](tools/r2-keys.sh) derives R2's S3 keys from it by
+Cloudflare's rule (the access key ID is the token's ID, the secret the SHA-256
+of the token), so there are no separate R2 keys to keep.
+
+The workflow reads two repository secrets (and Dependabot secrets of the same
+names, for its provider updates). `infra/run.sh` reads the same two values
+from KDE Wallet.
+
+| Secret | What it is | In KDE Wallet |
+| --- | --- | --- |
+| `CLOUDFLARE_API_TOKEN` | The token above | `secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu` |
+| `FORWARD_TO` | The mailbox that `ben@benbirt.io` forwards to | `secret-tool store --label="benbirt.io forward-to" service cloudflare forward-to benbirt.io` |
 
 Two steps are done by hand, once:
 
