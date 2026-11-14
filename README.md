@@ -28,3 +28,40 @@ when Zola has a new release.
 
 Every push to `main` builds the site and deploys it to GitHub Pages
 ([`pages.yml`](.github/workflows/pages.yml)).
+
+## DNS and email
+
+The domain's DNS records and its email routing (`ben@benbirt.io`) are OpenTofu
+configuration in [`infra/`](infra/), run through
+[rules_tofu](https://github.com/benbirt/rules_tofu):
+
+```sh
+bazel build //infra    # validates the configuration; needs no credentials
+infra/run.sh plan      # plans from termina, with the token from KDE Wallet
+```
+
+CI plans on pull requests that change `infra/` and applies on pushes to `main`
+([`infra.yml`](.github/workflows/infra.yml)). State is in the Cloudflare R2
+bucket `benbirt-io-tofu-state`.
+
+One Cloudflare token serves all of it: an account-owned API token,
+`benbirt-io-tofu` (Manage account > Account API tokens), with three policies:
+
+| Scope | Permissions |
+| --- | --- |
+| The `benbirt.io` zone | Zone: Read, Zone Settings: Edit (switching Email Routing on), DNS: Edit (records and DNSSEC), Email Routing Rules: Edit |
+| The account | Email Routing Addresses: Edit |
+| The R2 bucket `benbirt-io-tofu-state` | Object Read & Write |
+
+The `cloudflare` provider uses the token as it is. For the state bucket,
+[`tools/r2-keys.sh`](tools/r2-keys.sh) derives R2's S3 keys from it by
+Cloudflare's rule (the access key ID is the token's ID, the secret the SHA-256
+of the token), so there are no separate R2 keys to keep.
+
+The token is the repository secret `CLOUDFLARE_API_TOKEN` (for Actions, and
+again for Dependabot, for its provider updates). `infra/run.sh` reads it from
+KDE Wallet, where this stores it:
+
+```sh
+nix shell nixpkgs#libsecret --command secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu
+```

@@ -1,0 +1,31 @@
+# Weekly version updates, one pull request per ecosystem.
+#
+# Not covered: .bazelversion, which Dependabot doesn't update, and Zola, which
+# has its own workflow (update-zola.yml).
+version: 2
+updates:
+  # bazel_dep versions in MODULE.bazel; Dependabot runs `bazel mod tidy` to
+  # update MODULE.bazel.lock.
+  - package-ecosystem: bazel
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      bazel:
+        patterns: ["*"]
+
+  # The Cloudflare provider: its version in infra/main.tf and the lock beside
+  # it, which rules_tofu reads (tf_providers.from_lock in MODULE.bazel).
+  # "opentofu", not "terraform", which can't read an OpenTofu lock.
+  - package-ecosystem: opentofu
+    directory: /infra
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]

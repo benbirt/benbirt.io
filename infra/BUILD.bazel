@@ -1,0 +1,10 @@
+load("@rules_tofu//tf:defs.bzl", "tf_deploy")
+
+# The domain's DNS records and email routing. `bazel build //infra` validates
+# them; infra/run.sh plans or applies them with the keys from KDE Wallet, and
+# CI does the same with repository secrets (.github/workflows/infra.yml).
+tf_deploy(
+    name = "infra",
+    srcs = glob(["*.tf"]),
+    providers = ["@tf_providers//cloudflare/cloudflare"],
+)
