@@ -1,7 +1,7 @@
 +++
-title = "Writing"
+title = "Blog"
 description = "Posts by Ben Birt."
 sort_by = "date"
-template = "writing.html"
+template = "blog.html"
 page_template = "post.html"
 +++

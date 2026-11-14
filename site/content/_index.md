@@ -16,7 +16,7 @@ falsifiable.
 [GitHub](https://github.com/benbirt) ·
 [LinkedIn](https://www.linkedin.com/in/ben-birt)
 
-<!-- writing -->
+<!-- blog -->
 
 ## Transparency
 

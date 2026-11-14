@@ -1,19 +1,19 @@
 {% extends "base.html" %}
 
 {#- The front page is its Markdown, with the newest posts put where the
-    Markdown has the comment <!-- writing -->. Nothing is put there until
+    Markdown has the comment <!-- blog -->. Nothing is put there until
     there is a post. -#}
 {% block body %}
-  {%- set writing = get_section(path="writing/_index.md") -%}
+  {%- set blog = get_section(path="blog/_index.md") -%}
   {%- set newest = 5 -%}
-  {%- set parts = section.content | split(pat="<!-- writing -->") %}
+  {%- set parts = section.content | split(pat="<!-- blog -->") %}
   <main class="home">
     {{ parts[0] | safe }}
-    {%- if writing.pages and parts | length > 1 %}
-    <h2>{{ writing.title }}</h2>
-    {{ <post_list pages={writing.pages[:newest]} /> }}
-    {%- if writing.pages | length > newest %}
-    <p class="more"><a href="{{ writing.permalink }}">All writing</a></p>
+    {%- if blog.pages and parts | length > 1 %}
+    <h2>{{ blog.title }}</h2>
+    {{ <post_list pages={blog.pages[:newest]} /> }}
+    {%- if blog.pages | length > newest %}
+    <p class="more"><a href="{{ blog.permalink }}">All posts</a></p>
     {%- endif %}
     {%- endif %}
     {%- for part in parts[1:] %}

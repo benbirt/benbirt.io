@@ -8,7 +8,7 @@ build_search_index = false
 
 # Posts are plain Markdown: braces in them, as in `${{ github.ref }}`, are
 # text and not template syntax.
-skip_content_templating = ["writing/*"]
+skip_content_templating = ["blog/*"]
 
 # An Atom feed of the posts, at /atom.xml.
 generate_feeds = true
