@@ -56,19 +56,12 @@ resource "cloudflare_dns_record" "www" {
 
 # Proves to GitHub that the benbirt account owns the domain, so that no other
 # account can serve a site from it. The code is not a secret; it comes from
-# GitHub: Settings, Pages, Add a domain. Until it is filled in, there is no
-# record.
-locals {
-  github_pages_challenge = ""
-}
-
+# GitHub: Settings, Pages, Add a domain.
 resource "cloudflare_dns_record" "github_pages_challenge" {
-  count = local.github_pages_challenge == "" ? 0 : 1
-
   zone_id = local.zone_id
   name    = "_github-pages-challenge-benbirt.${local.domain}"
   type    = "TXT"
-  content = "\"${local.github_pages_challenge}\""
+  content = "\"74fcaf82a393ddcb71e4574921ac88\""
   ttl     = 1
   comment = "GitHub Pages domain verification"
 }
