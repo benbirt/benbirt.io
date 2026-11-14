@@ -1,6 +1,23 @@
 base_url = "https://benbirt.io"
 title = "Ben Birt"
 description = "Ben Birt: software engineer working on transparency and reproducibility."
+author = "Ben Birt"
 default_language = "en"
 compile_sass = false
 build_search_index = false
+
+# Posts are plain Markdown: braces in them, as in `${{ github.ref }}`, are
+# text and not template syntax.
+skip_content_templating = ["blog/*"]
+
+# An Atom feed of the posts, at /atom.xml.
+generate_feeds = true
+feed_filenames = ["atom.xml"]
+
+[markdown]
+smart_punctuation = true
+
+# Code blocks are coloured for both colour schemes; the browser picks.
+[markdown.highlighting]
+light_theme = "github-light"
+dark_theme = "github-dark"

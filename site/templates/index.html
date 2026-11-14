@@ -1,20 +1,23 @@
-<!doctype html>
-<html lang="{{ lang }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ config.title }}</title>
-  <meta name="description" content="{{ config.description }}">
-  <link rel="canonical" href="{{ section.permalink }}">
-  <meta property="og:title" content="{{ config.title }}">
-  <meta property="og:description" content="{{ config.description }}">
-  <meta property="og:url" content="{{ section.permalink }}">
-  <meta property="og:type" content="website">
-  <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
-</head>
-<body>
-  <main>
-    {{ section.content | safe }}
+{% extends "base.html" %}
+
+{#- The front page is its Markdown, with the newest posts put where the
+    Markdown has the comment <!-- blog -->. Nothing is put there until
+    there is a post. -#}
+{% block body %}
+  {%- set blog = get_section(path="blog/_index.md") -%}
+  {%- set newest = 5 -%}
+  {%- set parts = section.content | split(pat="<!-- blog -->") %}
+  <main class="home">
+    {{ parts[0] | safe }}
+    {%- if blog.pages and parts | length > 1 %}
+    <h2>{{ blog.title }}</h2>
+    {{ <post_list pages={blog.pages[:newest]} /> }}
+    {%- if blog.pages | length > newest %}
+    <p class="more"><a href="{{ blog.permalink }}">All posts</a></p>
+    {%- endif %}
+    {%- endif %}
+    {%- for part in parts[1:] %}
+    {{ part | safe }}
+    {%- endfor %}
   </main>
-</body>
-</html>
+{% endblock %}

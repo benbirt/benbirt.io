@@ -1,0 +1,47 @@
+{#- Every page's frame. The title, description and address come from the page
+    or section being rendered, and from the site's config for the front page.
+    Link previews on other sites (the og: and twitter: tags) get the title
+    without the site's name, which they show separately. -#}
+{%- if page -%}
+  {%- set name = page.title -%}
+  {%- set title = page.title ~ " · " ~ config.title -%}
+  {%- set description = page.description | default(value=config.description) -%}
+  {%- set permalink = page.permalink -%}
+  {%- set og_type = "article" -%}
+{%- elif section and section.title -%}
+  {%- set name = section.title -%}
+  {%- set title = section.title ~ " · " ~ config.title -%}
+  {%- set description = section.description | default(value=config.description) -%}
+  {%- set permalink = section.permalink -%}
+  {%- set og_type = "website" -%}
+{%- else -%}
+  {%- set name = config.title -%}
+  {%- set title = config.title -%}
+  {%- set description = config.description -%}
+  {%- set permalink = get_url(path="/") ~ "/" -%}
+  {%- set og_type = "website" -%}
+{%- endif -%}
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ title }}{% endblock %}</title>
+  <meta name="description" content="{{ description }}">
+  <link rel="canonical" href="{{ permalink }}">
+  <meta property="og:site_name" content="{{ config.title }}">
+  <meta property="og:title" content="{{ name }}">
+  <meta property="og:description" content="{{ description }}">
+  <meta property="og:url" content="{{ permalink }}">
+  <meta property="og:type" content="{{ og_type }}">
+  {%- if page and page.date %}
+  <meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%dT%H:%M:%SZ") }}">
+  {%- endif %}
+  <meta name="twitter:card" content="summary">
+  <link rel="alternate" type="application/atom+xml" title="{{ config.title }}" href="{{ get_url(path='atom.xml') }}">
+  <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
+</head>
+<body>
+{% block body %}{% endblock %}
+</body>
+</html>

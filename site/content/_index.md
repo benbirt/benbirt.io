@@ -16,6 +16,8 @@ falsifiable.
 [GitHub](https://github.com/benbirt) ·
 [LinkedIn](https://www.linkedin.com/in/ben-birt)
 
+<!-- blog -->
+
 ## Transparency
 
 ### Private AI Compute transparency log
