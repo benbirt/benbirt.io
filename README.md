@@ -58,14 +58,13 @@ The `cloudflare` provider uses the token as it is. For the state bucket,
 Cloudflare's rule (the access key ID is the token's ID, the secret the SHA-256
 of the token), so there are no separate R2 keys to keep.
 
-The workflow reads two repository secrets (and Dependabot secrets of the same
-names, for its provider updates). `infra/run.sh` reads the same two values
-from KDE Wallet.
+The token is the repository secret `CLOUDFLARE_API_TOKEN` (for Actions, and
+again for Dependabot, for its provider updates). `infra/run.sh` reads it from
+KDE Wallet, where this stores it:
 
-| Secret | What it is | In KDE Wallet |
-| --- | --- | --- |
-| `CLOUDFLARE_API_TOKEN` | The token above | `secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu` |
-| `FORWARD_TO` | The mailbox that `ben@benbirt.io` forwards to | `secret-tool store --label="benbirt.io forward-to" service cloudflare forward-to benbirt.io` |
+```sh
+nix shell nixpkgs#libsecret --command secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu
+```
 
 Two steps are done by hand, once:
 

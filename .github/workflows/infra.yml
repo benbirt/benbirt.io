@@ -46,7 +46,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      TF_VAR_forward_to: ${{ secrets.FORWARD_TO }}
     steps:
       - uses: actions/checkout@v7
       # The state bucket's S3 keys, derived from the Cloudflare token and

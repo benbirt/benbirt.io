@@ -2,12 +2,11 @@
 # reviewed and changed here and not in Cloudflare's dashboard. CI plans on pull
 # requests and applies on pushes to main (.github/workflows/infra.yml).
 #
-# Credentials and private values come from the environment:
+# Credentials come from the environment:
 #   CLOUDFLARE_API_TOKEN                       the one Cloudflare token (README.md): the zone and the
 #                                              state bucket
 #   AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY   the state bucket's S3 keys, derived from that token
 #                                              by tools/r2-keys.sh
-#   TF_VAR_forward_to                          the mailbox that ben@benbirt.io forwards to
 # Locally (on termina, with the keys in KDE Wallet): infra/run.sh plan
 
 terraform {

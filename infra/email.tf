@@ -1,10 +1,9 @@
 # ben@benbirt.io, forwarded by Cloudflare Email Routing. It only receives:
 # sending from the address is a separate piece of work (issue #2).
 
-variable "forward_to" {
-  type        = string
-  description = "The mailbox that ben@benbirt.io forwards to. Kept out of the repository."
-  sensitive   = true
+locals {
+  # The mailbox that ben@benbirt.io forwards to.
+  forward_to = "benjamin.birt@gmail.com"
 }
 
 # Turns Email Routing on for the zone, which adds the MX, SPF and DKIM records
@@ -17,7 +16,7 @@ resource "cloudflare_email_routing_dns" "this" {
 # link has been followed.
 resource "cloudflare_email_routing_address" "forward_to" {
   account_id = local.account_id
-  email      = var.forward_to
+  email      = local.forward_to
 }
 
 resource "cloudflare_email_routing_rule" "ben" {
