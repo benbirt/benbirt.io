@@ -73,8 +73,8 @@ p {
   margin: 0 0 1rem;
 }
 
-h3 + p {
-  margin-bottom: 0.3rem;
+h3 ~ p {
+  margin-bottom: 0.4rem;
 }
 
 a {
@@ -91,11 +91,21 @@ h3 a {
   color: inherit;
 }
 
-/* The line of links that closes each project. */
-h3 + p + p {
+/* A list is a line of links: under each project, the places to find it. */
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
   font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
   font-size: 0.85rem;
   color: var(--muted);
+}
+
+li + li::before {
+  content: "·";
+  margin: 0 0.4em;
 }
 
 @media (max-width: 30rem) {

@@ -1,0 +1,57 @@
+name: Update Zola
+
+# Opens a pull request when Zola has a new release.
+
+on:
+  schedule:
+    - cron: "23 5 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: update-zola
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: update
+        run: |
+          version="$(tools/zola/update.sh)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - if: steps.update.outputs.changed == 'true'
+        uses: bazel-contrib/setup-bazel@0.19.2
+        with:
+          bazelisk-cache: true
+          repository-cache: true
+      # A pull request opened with the workflow's own token does not start the
+      # Pages workflow, so the site is built with the new Zola here.
+      - if: steps.update.outputs.changed == 'true'
+        run: bazel build //site:public
+      - if: steps.update.outputs.changed == 'true'
+        env:
+          VERSION: ${{ steps.update.outputs.version }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C update-zola
+          git commit -am "Update Zola to $VERSION"
+          git push --force origin update-zola
+          if [ -z "$(gh pr list --head update-zola --state open --json number --jq '.[].number')" ]; then
+            gh pr create --head update-zola --base main \
+              --title "Update Zola to $VERSION" \
+              --body "Zola [$VERSION](https://github.com/getzola/zola/releases/tag/v$VERSION), as pinned by \`tools/zola/update.sh\`. The site built with it in the workflow run that opened this pull request."
+          else
+            gh pr edit update-zola --title "Update Zola to $VERSION"
+          fi

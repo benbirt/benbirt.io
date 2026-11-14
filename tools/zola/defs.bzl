@@ -23,11 +23,41 @@ cp -RL "{config_dir}/." "$root/"
         mnemonic = "ZolaBuild",
         progress_message = "Building Zola site %{label}",
     )
-    return [DefaultInfo(files = depset([out]))]
+
+    # `bazel run` previews the source tree, so that edits show up as they are
+    # saved. Zola serves on port 1111, or on a free port if that one is taken,
+    # and prints the address. Its copy of the static files goes to a temporary
+    # directory, to keep it out of the source tree.
+    serve = ctx.actions.declare_file(ctx.label.name + "_serve.sh")
+    ctx.actions.write(
+        output = serve,
+        is_executable = True,
+        content = """#!/usr/bin/env bash
+set -euo pipefail
+zola="$PWD/{zola}"
+out="$(mktemp -d)"
+trap 'rm -rf "$out"' EXIT
+"$zola" --root "$BUILD_WORKSPACE_DIRECTORY/{root}" serve --force --output-dir "$out" "$@"
+""".format(
+            root = config_dir,
+            zola = ctx.executable._zola_for_run.short_path,
+        ),
+    )
+
+    return [DefaultInfo(
+        files = depset([out]),
+        executable = serve,
+        runfiles = ctx.runfiles(files = [ctx.executable._zola_for_run]),
+    )]
 
 zola_site = rule(
     implementation = _zola_site_impl,
-    doc = "Builds a Zola site into a directory of static files.",
+    doc = """Builds a Zola site into a directory of static files.
+
+`bazel build` produces the directory. `bazel run` serves a live preview of
+the source tree, which rebuilds as files change.
+""",
+    executable = True,
     attrs = {
         "config": attr.label(
             allow_single_file = [".toml"],
@@ -44,33 +74,7 @@ zola_site = rule(
             cfg = "exec",
             allow_single_file = True,
         ),
-    },
-)
-
-def _zola_serve_impl(ctx):
-    launcher = ctx.actions.declare_file(ctx.label.name + ".sh")
-    ctx.actions.write(
-        output = launcher,
-        is_executable = True,
-        content = """#!/usr/bin/env bash
-set -euo pipefail
-exec "{zola}" --root "$BUILD_WORKSPACE_DIRECTORY/{package}" serve "$@"
-""".format(
-            package = ctx.label.package,
-            zola = ctx.executable._zola.short_path,
-        ),
-    )
-    return [DefaultInfo(
-        executable = launcher,
-        runfiles = ctx.runfiles(files = [ctx.executable._zola]),
-    )]
-
-zola_serve = rule(
-    implementation = _zola_serve_impl,
-    doc = "Serves this package's Zola site from the source tree, rebuilding on change.",
-    executable = True,
-    attrs = {
-        "_zola": attr.label(
+        "_zola_for_run": attr.label(
             default = "//tools/zola",
             executable = True,
             cfg = "target",

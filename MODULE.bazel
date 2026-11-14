@@ -4,9 +4,9 @@ module(name = "benbirt_io")
 
 bazel_dep(name = "platforms", version = "1.0.0")
 
-# Zola, the static site generator, as its released binaries. To update, change
-# the version and take each sha256 from the release's asset digests:
-#   gh api repos/getzola/zola/releases/latest --jq '.assets[] | .name + " " + .digest'
+# Zola, the static site generator, as its released binaries. The version and
+# the sha256s are kept up to date by tools/zola/update.sh, which a weekly
+# workflow runs.
 ZOLA_VERSION = "0.23.6"
 
 http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")

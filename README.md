@@ -9,26 +9,21 @@ The copy is Markdown, in [`site/content/_index.md`](site/content/_index.md).
 The page's HTML frame is [`site/templates/index.html`](site/templates/index.html)
 and its styling is [`site/static/style.css`](site/static/style.css).
 
-Under each project heading, the first paragraph is the description and the
-second is the line of links.
+Under each project heading, the list is its line of links: each item is one
+link, and the items are laid out on a single line.
 
 ## Building
 
 ```sh
 bazel build //site:public   # the site, in bazel-bin/site/public
-bazel run //site:serve      # live preview at http://127.0.0.1:1111
+bazel run //site:public     # a live preview of the source tree
 ```
 
-Bazel downloads the pinned Zola release; nothing else needs installing. To
-update Zola, see the comment in [`MODULE.bazel`](MODULE.bazel).
+Bazel downloads the pinned Zola release; nothing else needs installing. A
+weekly workflow ([`update-zola.yml`](.github/workflows/update-zola.yml)) opens
+a pull request when Zola has a new release.
 
 ## Deploying
 
 Every push to `main` builds the site and deploys it to GitHub Pages
 ([`pages.yml`](.github/workflows/pages.yml)).
-
-## Follow-ups
-
-1. Send mail as `ben@benbirt.io` from Gmail (receiving is forwarded by
-   Cloudflare Email Routing; sending needs its own setup).
-2. A writing section.
