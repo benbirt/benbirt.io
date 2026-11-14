@@ -1,0 +1,11 @@
+load("//tools/zola:defs.bzl", "zola_site")
+
+zola_site(
+    name = "public",
+    srcs = glob([
+        "content/**",
+        "static/**",
+        "templates/**",
+    ]),
+    config = "config.toml",
+)

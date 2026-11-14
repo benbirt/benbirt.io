@@ -1,0 +1,29 @@
+"""benbirt.io: Ben Birt's personal site."""
+
+module(name = "benbirt_io")
+
+bazel_dep(name = "platforms", version = "1.0.0")
+
+# Zola, the static site generator, as its released binaries. The version and
+# the sha256s are kept up to date by tools/zola/update.sh, which a weekly
+# workflow runs.
+ZOLA_VERSION = "0.23.6"
+
+http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+
+[
+    http_archive(
+        name = "zola_" + name,
+        build_file_content = 'exports_files(["zola"])',
+        sha256 = sha256,
+        url = "https://github.com/getzola/zola/releases/download/v{v}/zola-v{v}-{triple}.tar.gz".format(
+            triple = triple,
+            v = ZOLA_VERSION,
+        ),
+    )
+    for name, triple, sha256 in [
+        # musl: statically linked, so it also runs on NixOS.
+        ("linux_x86_64", "x86_64-unknown-linux-musl", "7d77a4220a4f699cba2fc0e0c7859f780e887e269159ad4fab90e11ea16c906f"),
+        ("macos_arm64", "aarch64-apple-darwin", "cbffbd29b3f59c3f52633507c8cb945a7a02d8b1399b43b235f5932912297aa3"),
+    ]
+]

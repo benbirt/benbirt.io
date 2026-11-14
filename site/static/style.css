@@ -1,0 +1,125 @@
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf7;
+  --fg: #1d1d1b;
+  --muted: #6a6a64;
+  --rule: #dddbd3;
+  --link: #0b5a8c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161715;
+    --fg: #e6e4dd;
+    --muted: #9c9a92;
+    --rule: #33342f;
+    --link: #7fc1ea;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-family: Charter, "Bitstream Charter", "Sitka Text", Cambria, Georgia, serif;
+  font-size: 18px;
+  line-height: 1.6;
+  background: var(--bg);
+  color: var(--fg);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 4rem 1.5rem 5rem;
+}
+
+main {
+  max-width: 38rem;
+  margin: 0 auto;
+}
+
+h1,
+h2,
+h3 {
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 2.2rem;
+  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+}
+
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 3.5rem 0 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+h3 {
+  font-size: 1.05rem;
+  margin: 1.6rem 0 0.2rem;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+/* The paragraph just before a line of links sits close to it. */
+p:has(+ ul) {
+  margin-bottom: 0.4rem;
+}
+
+a {
+  color: var(--link);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+h3 a {
+  color: inherit;
+}
+
+/* A list is a line of links: under each project, the places to find it. */
+ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+li + li::before {
+  content: "·";
+  margin: 0 0.4em;
+}
+
+@media (max-width: 30rem) {
+  html {
+    font-size: 17px;
+  }
+
+  body {
+    padding-top: 2.5rem;
+  }
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.88em;
+}
