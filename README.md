@@ -6,11 +6,39 @@ by [Zola](https://www.getzola.org/) under Bazel and served by GitHub Pages.
 ## Editing
 
 The copy is Markdown, in [`site/content/_index.md`](site/content/_index.md).
-The page's HTML frame is [`site/templates/index.html`](site/templates/index.html)
+The HTML around it is in [`site/templates/`](site/templates/)
 and its styling is [`site/static/style.css`](site/static/style.css).
 
 Under each project heading, the list is its line of links: each item is one
 link, and the items are laid out on a single line.
+
+## Writing a post
+
+A post is a Markdown file in [`site/content/writing/`](site/content/writing/);
+its file name is its address, so `on-witnesses.md` is published at
+`/writing/on-witnesses/`. It starts with:
+
+```toml
++++
+title = "On witnesses"
+date = 2026-11-20
+description = "One sentence, shown in lists of posts, the feed and link previews."
+draft = true
++++
+```
+
+- **Drafts**: a post with `draft = true` is left out of the site. `bazel run
+  //site:public -- --drafts` previews it; delete the line to publish.
+- **Where posts appear**: on `/writing/`, in the Atom feed at `/atom.xml`, and
+  on the front page, where its Markdown has the comment `<!-- writing -->`
+  (the five newest). The front page shows no "Writing" heading until there is
+  a post.
+- **Markdown**: fenced code blocks are highlighted when they name their
+  language, and footnotes and tables work. Posts are plain Markdown, with no
+  template syntax, so braces need no escaping.
+- **Images**: put the file beside the post, in a directory of the post's own:
+  `writing/on-witnesses/index.md` with `diagram.png`, referred to as
+  `![A diagram](diagram.png)`.
 
 ## Building
 

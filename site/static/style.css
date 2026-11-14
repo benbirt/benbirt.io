@@ -5,6 +5,9 @@
   --muted: #6a6a64;
   --rule: #dddbd3;
   --link: #0b5a8c;
+  --code-bg: #f1efe9;
+  --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -14,6 +17,7 @@
     --muted: #9c9a92;
     --rule: #33342f;
     --link: #7fc1ea;
+    --code-bg: #20211f;
   }
 }
 
@@ -35,7 +39,8 @@ body {
   padding: 4rem 1.5rem 5rem;
 }
 
-main {
+main,
+nav {
   max-width: 38rem;
   margin: 0 auto;
 }
@@ -43,7 +48,7 @@ main {
 h1,
 h2,
 h3 {
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   line-height: 1.25;
 }
 
@@ -53,29 +58,8 @@ h1 {
   margin: 0 0 1.5rem;
 }
 
-h2 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin: 3.5rem 0 0;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--rule);
-}
-
-h3 {
-  font-size: 1.05rem;
-  margin: 1.6rem 0 0.2rem;
-}
-
 p {
   margin: 0 0 1rem;
-}
-
-/* The paragraph just before a line of links sits close to it. */
-p:has(+ ul) {
-  margin-bottom: 0.4rem;
 }
 
 a {
@@ -88,25 +72,191 @@ a:hover {
   text-decoration-thickness: 2px;
 }
 
-h3 a {
-  color: inherit;
+code {
+  font-family: var(--mono);
+  font-size: 0.88em;
 }
 
-/* A list is a line of links: under each project, the places to find it. */
-ul {
+time {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* The front page: a heading per group of projects, and one per project. */
+
+.home h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin: 3.5rem 0 0;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.home h3 {
+  font-size: 1.05rem;
+  margin: 1.6rem 0 0.2rem;
+}
+
+/* On the front page a Markdown list is a line of links: under each project,
+   the places to find it. The paragraph just before it sits close to it. */
+.home ul:not(.posts) {
   display: flex;
   flex-wrap: wrap;
   list-style: none;
   margin: 0 0 1rem;
   padding: 0;
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: var(--sans);
   font-size: 0.85rem;
   color: var(--muted);
 }
 
-li + li::before {
+.home ul:not(.posts) li + li::before {
   content: "·";
   margin: 0 0.4em;
+}
+
+.home p:has(+ ul:not(.posts)) {
+  margin-bottom: 0.4rem;
+}
+
+/* A list of posts: on the front page and on /writing/. */
+
+.posts {
+  list-style: none;
+  margin: 1.4rem 0 1rem;
+  padding: 0;
+}
+
+.posts li {
+  margin-bottom: 1.1rem;
+}
+
+.posts a {
+  font-family: var(--sans);
+  font-weight: 600;
+  margin-right: 0.5rem;
+}
+
+.posts p {
+  margin: 0.1rem 0 0;
+}
+
+.more {
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+/* The links above a post and above the list of posts. */
+
+nav {
+  display: flex;
+  gap: 1.2rem;
+  margin-bottom: 3rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+/* A post. */
+
+.post h1 {
+  margin-bottom: 0.5rem;
+}
+
+.post > time {
+  display: block;
+  margin-bottom: 2.2rem;
+}
+
+.post h2 {
+  font-size: 1.35rem;
+  margin: 2.4rem 0 0.8rem;
+}
+
+.post h3 {
+  font-size: 1.1rem;
+  margin: 1.8rem 0 0.6rem;
+}
+
+.post ul,
+.post ol {
+  margin: 0 0 1rem;
+  padding-left: 1.4rem;
+}
+
+.post li {
+  margin-bottom: 0.3rem;
+}
+
+.post blockquote {
+  margin: 0 0 1rem;
+  padding-left: 1rem;
+  border-left: 3px solid var(--rule);
+  color: var(--muted);
+}
+
+.post img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem auto;
+}
+
+.post hr {
+  border: 0;
+  border-top: 1px solid var(--rule);
+  margin: 2.5rem 0;
+}
+
+.post :not(pre) > code {
+  background: var(--code-bg);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+/* Code blocks carry their own colours for both schemes (config.toml). */
+.post pre {
+  margin: 0 0 1.2rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  overflow-x: auto;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+.post pre code {
+  font-size: inherit;
+}
+
+.post table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  margin: 0 0 1.2rem;
+  font-family: var(--sans);
+  font-size: 0.85rem;
+}
+
+.post th,
+.post td {
+  padding: 0.35rem 0.8rem 0.35rem 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: top;
+}
+
+.footnote-definition {
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.footnote-definition p {
+  display: inline;
 }
 
 @media (max-width: 30rem) {
@@ -117,9 +267,8 @@ li + li::before {
   body {
     padding-top: 2.5rem;
   }
-}
 
-code {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 0.88em;
+  nav {
+    margin-bottom: 2rem;
+  }
 }

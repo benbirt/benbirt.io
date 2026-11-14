@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block body %}
+  {% include "nav.html" %}
+  <main>
+    <h1>{{ section.title }}</h1>
+    {{ section.content | safe }}
+    {%- if section.pages %}
+    {{ <post_list pages={section.pages} /> }}
+    {%- else %}
+    <p>Nothing here yet.</p>
+    {%- endif %}
+  </main>
+{% endblock %}
