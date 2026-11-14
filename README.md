@@ -28,3 +28,34 @@ when Zola has a new release.
 
 Every push to `main` builds the site and deploys it to GitHub Pages
 ([`pages.yml`](.github/workflows/pages.yml)).
+
+## DNS and email
+
+The domain's DNS records and its email routing (`ben@benbirt.io`) are OpenTofu
+configuration in [`infra/`](infra/), run through
+[rules_tofu](https://github.com/benbirt/rules_tofu):
+
+```sh
+bazel build //infra    # validates the configuration; needs no credentials
+infra/run.sh plan      # plans from this computer, with the keys from KDE Wallet
+```
+
+CI plans on pull requests that change `infra/` and applies on pushes to `main`
+([`infra.yml`](.github/workflows/infra.yml)). State is in the Cloudflare R2
+bucket `benbirt-io-tofu-state`.
+
+The workflow reads four repository secrets (and Dependabot secrets of the same
+names, for its provider updates):
+
+| Secret | What it is |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | A Cloudflare API token for the `benbirt.io` zone, with Zone: Read, DNS: Edit and Email Routing Rules: Edit on the zone, and Email Routing Addresses: Edit on the account |
+| `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | An R2 token with Object Read & Write on the state bucket only |
+| `FORWARD_TO` | The mailbox that `ben@benbirt.io` forwards to |
+
+Two steps are done by hand, once:
+
+- Cloudflare emails the forwarding mailbox a link when its address is first
+  applied, and forwards nothing until the link has been followed.
+- The repository's custom domain is set in its Pages settings, after the DNS
+  records exist.
