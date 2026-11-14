@@ -1,0 +1,15 @@
+load("//tools/zola:defs.bzl", "zola_serve", "zola_site")
+
+# The built site: bazel-bin/site/public.
+zola_site(
+    name = "public",
+    srcs = glob([
+        "content/**",
+        "static/**",
+        "templates/**",
+    ]),
+    config = "config.toml",
+)
+
+# Live preview at http://127.0.0.1:1111: bazel run //site:serve
+zola_serve(name = "serve")

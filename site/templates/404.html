@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Not found · {{ config.title }}</title>
+  <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
+</head>
+<body>
+  <main>
+    <h1>Not found</h1>
+    <p>There is nothing at this address. <a href="{{ config.base_url }}/">Back to the front page.</a></p>
+  </main>
+</body>
+</html>
