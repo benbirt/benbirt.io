@@ -25,7 +25,11 @@ jobs:
         run: |
           version="$(tools/zola/update.sh)"
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          # Nothing to do if main is up to date, or if the open pull request's
+          # branch already holds this update.
           if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          elif git fetch --quiet origin update-zola && git diff --quiet FETCH_HEAD -- MODULE.bazel; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -48,10 +52,10 @@ jobs:
           git switch -C update-zola
           git commit -am "Update Zola to $VERSION"
           git push --force origin update-zola
+          title="Update Zola to $VERSION"
+          body="Zola [$VERSION](https://github.com/getzola/zola/releases/tag/v$VERSION), as pinned by \`tools/zola/update.sh\`. The site built with it in the workflow run that last pushed this branch."
           if [ -z "$(gh pr list --head update-zola --state open --json number --jq '.[].number')" ]; then
-            gh pr create --head update-zola --base main \
-              --title "Update Zola to $VERSION" \
-              --body "Zola [$VERSION](https://github.com/getzola/zola/releases/tag/v$VERSION), as pinned by \`tools/zola/update.sh\`. The site built with it in the workflow run that opened this pull request."
+            gh pr create --head update-zola --base main --title "$title" --body "$body"
           else
-            gh pr edit update-zola --title "Update Zola to $VERSION"
+            gh pr edit update-zola --title "$title" --body "$body"
           fi

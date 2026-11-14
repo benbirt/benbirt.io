@@ -18,9 +18,12 @@ config_setting(
 
 alias(
     name = "zola",
-    actual = select({
-        ":linux_x86_64": "@zola_linux_x86_64//:zola",
-        ":macos_arm64": "@zola_macos_arm64//:zola",
-    }),
+    actual = select(
+        {
+            ":linux_x86_64": "@zola_linux_x86_64//:zola",
+            ":macos_arm64": "@zola_macos_arm64//:zola",
+        },
+        no_match_error = "Zola is only set up for Linux x86_64 and macOS arm64: see MODULE.bazel.",
+    ),
     visibility = ["//visibility:public"],
 )

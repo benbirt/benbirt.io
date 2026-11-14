@@ -73,7 +73,8 @@ p {
   margin: 0 0 1rem;
 }
 
-h3 ~ p {
+/* The paragraph just before a line of links sits close to it. */
+p:has(+ ul) {
   margin-bottom: 0.4rem;
 }
 

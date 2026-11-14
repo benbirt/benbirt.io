@@ -2,21 +2,34 @@
 
 def _zola_site_impl(ctx):
     out = ctx.actions.declare_directory(ctx.label.name)
-    config_dir = ctx.file.config.dirname
 
-    # Zola wants a real directory tree, so copy the sandbox's symlinks into one.
+    # The site root is the config's directory. Zola wants a real directory
+    # tree, so each input is copied to its place under a temporary root.
+    site_root = ctx.file.config.short_path.rpartition("/")[0]
+    prefix = site_root + "/" if site_root else ""
+    copies = ctx.actions.args()
+    for f in [ctx.file.config] + ctx.files.srcs:
+        if not f.short_path.startswith(prefix):
+            fail("%s is not under the site root, %s" % (f.short_path, site_root or "the workspace root"))
+        copies.add(f)
+        copies.add(f.short_path[len(prefix):])
+
     ctx.actions.run_shell(
         outputs = [out],
         inputs = [ctx.file.config] + ctx.files.srcs,
         tools = [ctx.executable._zola],
+        arguments = [copies],
         command = """
 set -euo pipefail
 root="$(mktemp -d)"
 trap 'rm -rf "$root"' EXIT
-cp -RL "{config_dir}/." "$root/"
+while (($#)); do
+  mkdir -p "$root/$(dirname "$2")"
+  cp -L "$1" "$root/$2"
+  shift 2
+done
 "{zola}" --root "$root" build --force --output-dir "{out}"
 """.format(
-            config_dir = config_dir,
             out = out.path,
             zola = ctx.executable._zola.path,
         ),
@@ -39,7 +52,7 @@ out="$(mktemp -d)"
 trap 'rm -rf "$out"' EXIT
 "$zola" --root "$BUILD_WORKSPACE_DIRECTORY/{root}" serve --force --output-dir "$out" "$@"
 """.format(
-            root = config_dir,
+            root = site_root or ".",
             zola = ctx.executable._zola_for_run.short_path,
         ),
     )

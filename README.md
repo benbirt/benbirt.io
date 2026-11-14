@@ -19,9 +19,10 @@ bazel build //site:public   # the site, in bazel-bin/site/public
 bazel run //site:public     # a live preview of the source tree
 ```
 
-Bazel downloads the pinned Zola release; nothing else needs installing. A
-weekly workflow ([`update-zola.yml`](.github/workflows/update-zola.yml)) opens
-a pull request when Zola has a new release.
+Both need only Bazel (or Bazelisk), on Linux x86_64 or macOS arm64: Bazel
+downloads the pinned Zola release. A weekly workflow
+([`update-zola.yml`](.github/workflows/update-zola.yml)) opens a pull request
+when Zola has a new release.
 
 ## Deploying
 

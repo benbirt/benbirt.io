@@ -5,10 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{ config.title }}</title>
   <meta name="description" content="{{ config.description }}">
-  <link rel="canonical" href="{{ config.base_url }}/">
+  <link rel="canonical" href="{{ section.permalink }}">
   <meta property="og:title" content="{{ config.title }}">
   <meta property="og:description" content="{{ config.description }}">
-  <meta property="og:url" content="{{ config.base_url }}/">
+  <meta property="og:url" content="{{ section.permalink }}">
   <meta property="og:type" content="website">
   <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
 </head>
