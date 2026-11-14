@@ -37,7 +37,7 @@ configuration in [`infra/`](infra/), run through
 
 ```sh
 bazel build //infra    # validates the configuration; needs no credentials
-infra/run.sh plan      # plans from this computer, with the keys from KDE Wallet
+infra/run.sh plan      # plans from termina, with the token from KDE Wallet
 ```
 
 CI plans on pull requests that change `infra/` and applies on pushes to `main`
@@ -65,10 +65,3 @@ KDE Wallet, where this stores it:
 ```sh
 nix shell nixpkgs#libsecret --command secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu
 ```
-
-Two steps are done by hand, once:
-
-- Cloudflare emails the forwarding mailbox a link when its address is first
-  applied, and forwards nothing until the link has been followed.
-- The repository's custom domain is set in its Pages settings, after the DNS
-  records exist.

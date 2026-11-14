@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Plans or applies the domain's configuration from this computer, with the
+# Plans or applies the domain's configuration from termina, with the
 # Cloudflare token from KDE Wallet (stored with secret-tool; README.md says
 # how). CI normally applies it, on pushes to main; this is for trying a change
 # first.
