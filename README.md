@@ -77,7 +77,7 @@ One Cloudflare token serves all of it: an account-owned API token,
 
 | Scope | Permissions |
 | --- | --- |
-| The `benbirt.io` zone | Zone: Read, Zone Settings: Edit (switching Email Routing on), DNS: Edit (records and DNSSEC), Email Routing Rules: Edit |
+| The `benbirt.io` zone | Zone: Read, Zone Settings: Edit (switching Email Routing on), DNS: Edit (records and DNSSEC), Email Routing Rules: Edit, Dynamic URL Redirects: Edit (redirect.tf) |
 | The account | Email Routing Addresses: Edit |
 | The R2 bucket `benbirt-io-tofu-state` | Object Read & Write |
 
