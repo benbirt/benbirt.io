@@ -77,3 +77,15 @@ resource "cloudflare_dns_record" "flip7" {
   proxied = false
   comment = "GitHub Pages: benbirt/flip7-scorecard"
 }
+
+# tlog-viewer, served by GitHub Pages from benbirt/tlog-viewer, whose Pages
+# settings name this domain.
+resource "cloudflare_dns_record" "tlog" {
+  zone_id = local.zone_id
+  name    = "tlog.${local.domain}"
+  type    = "CNAME"
+  content = "benbirt.github.io"
+  ttl     = 1
+  proxied = false
+  comment = "GitHub Pages: benbirt/tlog-viewer"
+}
