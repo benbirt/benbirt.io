@@ -58,7 +58,7 @@ the underlying HTTP transport.
 A static transparency log viewer which performs cryptographic verification in
 the browser.
 
-- [Open it](https://benbirt.github.io/tlog-viewer/)
+- [Open it](https://tlog.benbirt.io/)
 - [Code](https://github.com/benbirt/tlog-viewer)
 
 ## Reproducible builds
