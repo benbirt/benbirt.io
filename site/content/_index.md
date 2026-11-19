@@ -101,8 +101,7 @@ Hands-off ambient music for tabletop role-playing sessions.
 
 ### Flip 7 Scorecard
 
-A scorecard for the card game Flip 7, made for phones, with negative scores
-for With a Vengeance and a celebration for the winner.
+A scorecard for the card game Flip 7, with a couple of fun extras.
 
 - [Open it](https://flip7.benbirt.io/)
 - [Code](https://github.com/benbirt/flip7-scorecard)
