@@ -65,3 +65,15 @@ resource "cloudflare_dns_record" "github_pages_challenge" {
   ttl     = 1
   comment = "GitHub Pages domain verification"
 }
+
+# The Flip 7 scorecard, served by GitHub Pages from benbirt/flip7-scorecard,
+# whose Pages settings name this domain.
+resource "cloudflare_dns_record" "flip7" {
+  zone_id = local.zone_id
+  name    = "flip7.${local.domain}"
+  type    = "CNAME"
+  content = "benbirt.github.io"
+  ttl     = 1
+  proxied = false
+  comment = "GitHub Pages: benbirt/flip7-scorecard"
+}
