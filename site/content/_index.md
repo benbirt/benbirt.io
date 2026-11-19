@@ -99,6 +99,14 @@ Hands-off ambient music for tabletop role-playing sessions.
 - [Open it](https://eavesbard.com/)
 - [Code](https://github.com/benbirt/eavesbard)
 
+### Flip 7 Scorecard
+
+A scorecard for the card game Flip 7, made for phones, with negative scores
+for With a Vengeance and a celebration for the winner.
+
+- [Open it](https://flip7.benbirt.io/)
+- [Code](https://github.com/benbirt/flip7-scorecard)
+
 ### The Hollow Isle
 
 A top-down action game that runs in the browser, inspired by my love of the
