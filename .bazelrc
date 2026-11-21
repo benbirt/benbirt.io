@@ -1,1 +1,6 @@
 test --test_output=errors
+
+# Setting ASPECT_TOOLS_TELEMETRY empty turns off aspect_tools_telemetry, pulled
+# in by the aspect_rules_lint dev dependency for //tools:format. Otherwise it
+# reports Bazel and module versions to Aspect.
+common --repo_env=ASPECT_TOOLS_TELEMETRY=

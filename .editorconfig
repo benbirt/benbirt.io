@@ -1,0 +1,5 @@
+# shfmt (//tools:format) reads its options from here.
+[*.sh]
+indent_style = space
+indent_size = 2
+switch_case_indent = true

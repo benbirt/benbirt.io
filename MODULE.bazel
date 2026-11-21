@@ -4,6 +4,10 @@ module(name = "benbirt_io")
 
 bazel_dep(name = "platforms", version = "1.0.0")
 
+# Formatting and Starlark lint: //tools:format and //tools:lint.
+bazel_dep(name = "aspect_rules_lint", version = "2.9.1", dev_dependency = True)
+bazel_dep(name = "buildifier_prebuilt", version = "10.2.0", dev_dependency = True)
+
 # Zola, the static site generator, as its released binaries. The version and
 # the sha256s are kept up to date by tools/zola/update.sh, which a weekly
 # workflow runs.
