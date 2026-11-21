@@ -2,7 +2,7 @@
 
 module(name = "benbirt_io")
 
-bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "platforms", version = "1.1.0")
 
 # Formatting and Starlark lint: //tools:format and //tools:lint.
 bazel_dep(name = "aspect_rules_lint", version = "2.9.1", dev_dependency = True)
@@ -33,7 +33,7 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
 ]
 
 # The domain's DNS and email routing as OpenTofu (infra/), through rules_tofu.
-bazel_dep(name = "rules_tofu", version = "0.4.0")
+bazel_dep(name = "rules_tofu", version = "0.5.0")
 
 tofu = use_extension("@rules_tofu//toolchain:extensions.bzl", "tofu")
 use_repo(tofu, "tofu_toolchains")
