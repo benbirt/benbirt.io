@@ -27,13 +27,13 @@ jobs:
       # There are no test targets, so this is a build: `bazel test` fails
       # when it finds none.
       - run: bazel build //...
-      # Runs shfmt, buildifier and tofu fmt via rules_lint across every
-      # git-tracked shell, Starlark and OpenTofu file.
+      # Every git-tracked file, with the formatters and settings of
+      # benbirt/bazel-style.
       - name: Check formatting
         run: bazel run //tools:format.check
       # Checks every Starlark file in the workspace; fails on any buildifier
       # warning or formatting diff.
-      - name: Run buildifier (lint warnings)
+      - name: Lint Starlark
         run: bazel run //tools:lint
       - if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v5

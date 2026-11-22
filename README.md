@@ -28,7 +28,7 @@ draft = true
 ```
 
 - **Drafts**: a post with `draft = true` is left out of the site. `bazel run
-  //site:public -- --drafts` previews it; delete the line to publish.
+//site:public -- --drafts` previews it; delete the line to publish.
 - **Where posts appear**: on `/blog/`, in the Atom feed at `/atom.xml`, and
   on the front page, where its Markdown has the comment `<!-- blog -->`
   (the five newest). The front page shows no "Blog" heading until there is
@@ -51,6 +51,18 @@ Both need only Bazel (or Bazelisk), on Linux x86_64 or macOS arm64: Bazel
 downloads the pinned Zola release. A weekly workflow
 ([`update-zola.yml`](.github/workflows/update-zola.yml)) opens a pull request
 when Zola has a new release.
+
+## Formatting
+
+```sh
+bazel run //tools:format    # formats every file
+bazel run //tools:lint      # lints the Bazel files with buildifier
+```
+
+CI runs `bazel run //tools:format.check` and `bazel run //tools:lint`. The
+formatters and their settings come from
+[benbirt/bazel-style](https://github.com/benbirt/bazel-style), a dev
+dependency.
 
 ## Deploying
 
@@ -75,11 +87,11 @@ bucket `benbirt-io-tofu-state`.
 One Cloudflare token serves all of it: an account-owned API token,
 `benbirt-io-tofu` (Manage account > Account API tokens), with three policies:
 
-| Scope | Permissions |
-| --- | --- |
-| The `benbirt.io` zone | Zone: Read, Zone Settings: Edit (switching Email Routing on), DNS: Edit (records and DNSSEC), Email Routing Rules: Edit, Dynamic URL Redirects: Edit (redirect.tf) |
-| The account | Email Routing Addresses: Edit |
-| The R2 bucket `benbirt-io-tofu-state` | Object Read & Write |
+| Scope                                 | Permissions                                                                                                                                                        |
+| ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| The `benbirt.io` zone                 | Zone: Read, Zone Settings: Edit (switching Email Routing on), DNS: Edit (records and DNSSEC), Email Routing Rules: Edit, Dynamic URL Redirects: Edit (redirect.tf) |
+| The account                           | Email Routing Addresses: Edit                                                                                                                                      |
+| The R2 bucket `benbirt-io-tofu-state` | Object Read & Write                                                                                                                                                |
 
 The `cloudflare` provider uses the token as it is. For the state bucket,
 [`tools/r2-keys.sh`](tools/r2-keys.sh) derives R2's S3 keys from it by
