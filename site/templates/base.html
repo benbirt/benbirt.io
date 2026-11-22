@@ -21,27 +21,32 @@
   {%- set permalink = get_url(path="/") ~ "/" -%}
   {%- set og_type = "website" -%}
 {%- endif -%}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="{{ lang }}">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}{{ title }}{% endblock %}</title>
-  <meta name="description" content="{{ description }}">
-  <link rel="canonical" href="{{ permalink }}">
-  <meta property="og:site_name" content="{{ config.title }}">
-  <meta property="og:title" content="{{ name }}">
-  <meta property="og:description" content="{{ description }}">
-  <meta property="og:url" content="{{ permalink }}">
-  <meta property="og:type" content="{{ og_type }}">
-  {%- if page and page.date %}
-  <meta property="article:published_time" content="{{ page.date | date(format="%Y-%m-%dT%H:%M:%SZ") }}">
-  {%- endif %}
-  <meta name="twitter:card" content="summary">
-  <link rel="alternate" type="application/atom+xml" title="{{ config.title }}" href="{{ get_url(path='atom.xml') }}">
-  <link rel="stylesheet" href="{{ get_url(path='style.css', cachebust=true) }}">
-</head>
-<body>
-{% block body %}{% endblock %}
-</body>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+    <meta name="description" content="{{ description }}">
+    <link rel="canonical" href="{{ permalink }}">
+    <meta property="og:site_name" content="{{ config.title }}">
+    <meta property="og:title" content="{{ name }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:url" content="{{ permalink }}">
+    <meta property="og:type" content="{{ og_type }}">
+    {%- if page and page.date %}
+      <meta property="article:published_time"
+            content="{{ page.date | date(format='%Y-%m-%dT%H:%M:%SZ') }}">
+    {%- endif %}
+    <meta name="twitter:card" content="summary">
+    <link rel="alternate"
+          type="application/atom+xml"
+          title="{{ config.title }}"
+          href="{{ get_url(path='atom.xml') }}">
+    <link rel="stylesheet"
+          href="{{ get_url(path='style.css', cachebust=true) }}">
+  </head>
+  <body>
+    {% block body %}{% endblock %}
+  </body>
 </html>
