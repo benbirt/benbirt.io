@@ -52,6 +52,18 @@ downloads the pinned Zola release. A weekly workflow
 ([`update-zola.yml`](.github/workflows/update-zola.yml)) opens a pull request
 when Zola has a new release.
 
+## Formatting
+
+```sh
+bazel run //tools:format    # formats every file
+bazel run //tools:lint      # lints the Bazel files with buildifier
+```
+
+CI runs `bazel run //tools:format.check` and `bazel run //tools:lint`. The
+formatters and their settings come from
+[benbirt/bazel-style](https://github.com/benbirt/bazel-style), a dev
+dependency.
+
 ## Deploying
 
 Every push to `main` builds the site and deploys it to GitHub Pages

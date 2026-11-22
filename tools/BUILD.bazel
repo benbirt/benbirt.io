@@ -1,24 +1,8 @@
-# Maintainer tools for formatting and linting.
-load("@aspect_rules_lint//format:defs.bzl", "format_multirun")
-load("@buildifier_prebuilt//:rules.bzl", "buildifier")
+load("@bazel_style//:defs.bzl", "style")
 
-# Formats git-tracked shell, Starlark and OpenTofu files via rules_lint:
-# `bazel run //tools:format` rewrites files; `:format.check` checks them.
-format_multirun(
-    name = "format",
-    shell = "@aspect_rules_lint//format:shfmt",
-    starlark = "@buildifier_prebuilt//:buildifier",
-    terraform = "@rules_tofu//tofu",
-)
-
-# Lints every Starlark file under the workspace via `bazel run //tools:lint`,
-# including untracked files; fails on any lint warning or formatting diff.
-# Excludes `.git` so refs like `fix/BUILD` are not matched. Suppress
-# deliberate warnings inline with `# buildifier: disable=<warning>` and a
-# reason; buildifier reads no ignore file.
-buildifier(
-    name = "lint",
-    exclude_patterns = ["./.git/*"],
-    lint_mode = "warn",
-    mode = "check",
-)
+# bazel run //tools:format formats every git-tracked file, with the formatters
+# and settings of benbirt/bazel-style; //tools:format.check only checks, and
+# //tools:lint lints the Starlark. Exclude a file with the rules-lint-ignored
+# attribute in .gitattributes. OpenTofu files are formatted with the tofu this
+# repository already has, from rules_tofu.
+style(terraform = "@rules_tofu//tofu")
