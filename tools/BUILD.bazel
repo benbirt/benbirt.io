@@ -2,12 +2,13 @@
 load("@aspect_rules_lint//format:defs.bzl", "format_multirun")
 load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 
-# Formats git-tracked shell and Starlark files via rules_lint:
+# Formats git-tracked shell, Starlark and OpenTofu files via rules_lint:
 # `bazel run //tools:format` rewrites files; `:format.check` checks them.
 format_multirun(
     name = "format",
     shell = "@aspect_rules_lint//format:shfmt",
     starlark = "@buildifier_prebuilt//:buildifier",
+    terraform = "@rules_tofu//tofu",
 )
 
 # Lints every Starlark file under the workspace via `bazel run //tools:lint`,
