@@ -23,11 +23,12 @@ jobs:
           bazelisk-cache: true
           disk-cache: true
           repository-cache: true
-      # Builds the site, validates the OpenTofu configuration in infra/ and
-      # checks its formatting.
-      - run: bazel test //...
-      # Runs shfmt and buildifier via rules_lint across every git-tracked
-      # shell and Starlark file.
+      # Builds the site and validates the OpenTofu configuration in infra/.
+      # There are no test targets, so this is a build: `bazel test` fails
+      # when it finds none.
+      - run: bazel build //...
+      # Runs shfmt, buildifier and tofu fmt via rules_lint across every
+      # git-tracked shell, Starlark and OpenTofu file.
       - name: Check formatting
         run: bazel run //tools:format.check
       # Checks every Starlark file in the workspace; fails on any buildifier
