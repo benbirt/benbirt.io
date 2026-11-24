@@ -38,7 +38,7 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
 ]
 
 # The domain's DNS and email routing as OpenTofu (infra/), through rules_tofu.
-bazel_dep(name = "rules_tofu", version = "0.6.0")
+bazel_dep(name = "rules_tofu", version = "0.7.0")
 
 tofu = use_extension("@rules_tofu//toolchain:extensions.bzl", "tofu")
 use_repo(tofu, "tofu_toolchains")
