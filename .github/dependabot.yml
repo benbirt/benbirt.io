@@ -6,8 +6,8 @@
 # has its own workflow (update-zola.yml).
 version: 2
 updates:
-  # The Cloudflare provider: its version in infra/main.tf and the lock beside
-  # it, which rules_tofu reads (tf_providers.from_lock in MODULE.bazel).
+  # The providers' versions in infra/main.tf and the lock beside it, which
+  # rules_tofu reads (tf_providers.from_lock in MODULE.bazel).
   # "opentofu", not "terraform", which can't read an OpenTofu lock.
   - package-ecosystem: opentofu
     directory: /infra
