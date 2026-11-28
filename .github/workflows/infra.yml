@@ -1,6 +1,6 @@
 name: Infra
 
-# Keeps the domain's DNS records, its email routing and the PostHog dashboards
+# Keeps the domain's DNS records, its email routing and the PostHog dashboard
 # in line with infra/: plans on pull requests that change it, applies on
 # pushes to main. State is in Cloudflare R2, locked while a run uses it.
 # Dependabot's pull requests get the same secrets from the repository's

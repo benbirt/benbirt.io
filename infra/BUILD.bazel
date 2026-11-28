@@ -1,6 +1,6 @@
 load("@rules_tofu//tf:defs.bzl", "tf_deploy")
 
-# The domain's DNS records, email routing and PostHog dashboards.
+# The domain's DNS records, email routing and PostHog dashboard.
 # `bazel build //infra` validates the configuration; infra/run.sh plans or
 # applies it with the keys from KDE Wallet, and CI does the same with
 # repository secrets (.github/workflows/infra.yml).

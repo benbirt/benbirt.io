@@ -71,8 +71,8 @@ Every push to `main` builds the site and deploys it to GitHub Pages
 
 ## Infrastructure
 
-The domain's DNS records, its email routing (`ben@benbirt.io`) and two PostHog
-dashboards are OpenTofu configuration in [`infra/`](infra/), run through
+The domain's DNS records, its email routing (`ben@benbirt.io`) and a PostHog
+dashboard are OpenTofu configuration in [`infra/`](infra/), run through
 [rules_tofu](https://github.com/benbirt/rules_tofu):
 
 ```sh
@@ -82,14 +82,15 @@ infra/run.sh plan      # plans from termina, with the keys from KDE Wallet
 
 CI plans on pull requests that change `infra/` and applies on pushes to `main`
 ([`infra.yml`](.github/workflows/infra.yml)). State is in the Cloudflare R2
-bucket `benbirt-io-tofu-state`.
+bucket `benbirt-io-tofu-state`. The bucket also holds the state of
+tlog-viewer's dashboard, under a key of its own.
 
-The PostHog dashboards ([`infra/posthog.tf`](infra/posthog.tf)) are "benbirt.io
-visits", for `benbirt.io`, and "tlog-viewer usage", for `tlog.benbirt.io` (from
-[benbirt/tlog-viewer](https://github.com/benbirt/tlog-viewer)). Both sites send
-to PostHog's EU project 306168, shared with `eavesbard.com`, whose dashboard is
-in [benbirt/eavesbard](https://github.com/benbirt/eavesbard). Every insight
-filters on `$host`, so each dashboard shows one site only. A dashboard or
+The PostHog dashboard ([`infra/posthog.tf`](infra/posthog.tf)) is "benbirt.io
+visits". The site sends to PostHog's EU project 306168, shared with
+`eavesbard.com` and `tlog.benbirt.io`, whose dashboards are in
+[benbirt/eavesbard](https://github.com/benbirt/eavesbard) and
+[benbirt/tlog-viewer](https://github.com/benbirt/tlog-viewer). Every insight
+filters on `$host`, so the dashboard shows this site only. The dashboard or an
 insight changed in PostHog's UI is put back by the next apply.
 
 One Cloudflare token covers everything in Cloudflare, including the state

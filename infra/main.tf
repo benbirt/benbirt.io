@@ -1,5 +1,5 @@
 # benbirt.io's DNS records and email routing in Cloudflare, and the PostHog
-# dashboards in posthog.tf, so that they are reviewed and changed here and not
+# dashboard in posthog.tf, so that they are reviewed and changed here and not
 # in Cloudflare's or PostHog's UI. CI plans on pull requests and applies on
 # pushes to main (.github/workflows/infra.yml).
 #
