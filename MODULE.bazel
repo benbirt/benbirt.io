@@ -37,6 +37,20 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
     ]
 ]
 
+# PostHog's browser SDK, loaded by site/static/analytics.js to count visits.
+# dist/module.no-external.js is the one file in the package that needs no
+# others and loads nothing remotely. The version and integrity are kept up to
+# date by tools/posthog/update.sh, which a monthly workflow runs.
+POSTHOG_JS_VERSION = "1.455.4"
+
+http_archive(
+    name = "posthog_js",
+    build_file_content = 'exports_files(["dist/module.no-external.js", "LICENSE"])',
+    integrity = "sha512-CTuF1QH/Xa2hBjrfH7YABVE+vrB5u9WaFR1hicJ5bPJvRZZFSgyyNoQULGY+8cSVNqcDQIE6O31+b1Iwyd9++w==",
+    strip_prefix = "package",
+    url = "https://registry.npmjs.org/posthog-js/-/posthog-js-{v}.tgz".format(v = POSTHOG_JS_VERSION),
+)
+
 # The domain's DNS and email routing as OpenTofu (infra/), through rules_tofu.
 bazel_dep(name = "rules_tofu", version = "0.7.0")
 

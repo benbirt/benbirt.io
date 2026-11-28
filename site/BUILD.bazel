@@ -1,11 +1,28 @@
 load("//tools/zola:defs.bzl", "zola_site")
 
+# PostHog's SDK and its licence, placed under static/ so Zola serves them at
+# the site root beside analytics.js. bazel run //site:public previews the
+# source tree without them. Previews are never counted.
+genrule(
+    name = "posthog",
+    srcs = [
+        "@posthog_js//:dist/module.no-external.js",
+        "@posthog_js//:LICENSE",
+    ],
+    outs = [
+        "static/posthog.js",
+        "static/posthog-LICENSE.txt",
+    ],
+    cmd = "cp $(execpath @posthog_js//:dist/module.no-external.js) $(RULEDIR)/static/posthog.js && " +
+          "cp $(execpath @posthog_js//:LICENSE) $(RULEDIR)/static/posthog-LICENSE.txt",
+)
+
 zola_site(
     name = "public",
     srcs = glob([
         "content/**",
         "static/**",
         "templates/**",
-    ]),
+    ]) + [":posthog"],
     config = "config.toml",
 )

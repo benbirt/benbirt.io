@@ -69,6 +69,34 @@ dependency.
 Every push to `main` builds the site and deploys it to GitHub Pages
 ([`pages.yml`](.github/workflows/pages.yml)).
 
+## Analytics
+
+Every page loads [`site/static/analytics.js`](site/static/analytics.js), which
+sends one `$pageview` event per load to [PostHog](https://posthog.com/) in its
+EU cloud (`eu.i.posthog.com`). Everything automatic in PostHog's SDK is turned
+off. It uses cookieless mode, storing nothing in the browser. PostHog's servers
+count daily visitors from a hash of IP address and user agent with a salt
+discarded each day. Person profiles are off. Events go to a project shared with
+`eavesbard.com` and `tlog.benbirt.io`, told apart by host. The project token in
+`analytics.js` is public and can only send events.
+
+A visit is not counted when the host is not `benbirt.io`, the browser is
+automated (`navigator.webdriver`), Do Not Track is `"1"`, or Global Privacy
+Control is on. In those cases PostHog's SDK is not fetched.
+
+Bazel downloads the `posthog-js` npm archive pinned in
+[`MODULE.bazel`](MODULE.bazel), and [`site/BUILD.bazel`](site/BUILD.bazel)
+copies `dist/module.no-external.js` to `/posthog.js` with its licence at
+`/posthog-LICENSE.txt`. That file is about 440 kB. It is the one file in the
+package that needs no others and loads nothing from PostHog's servers.
+`bazel run //site:public` serves the source tree without `/posthog.js`, which
+does not matter because previews are never counted.
+
+[`tools/posthog/update.sh`](tools/posthog/update.sh) points `MODULE.bazel` at
+the latest `posthog-js` on npm, using `curl` and `jq`. A monthly workflow
+([`update-posthog.yml`](.github/workflows/update-posthog.yml)) runs it and
+opens a pull request, since `posthog-js` is released several times a week.
+
 ## DNS and email
 
 The domain's DNS records and its email routing (`ben@benbirt.io`) are OpenTofu
