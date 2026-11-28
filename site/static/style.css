@@ -272,3 +272,13 @@ nav {
     margin-bottom: 2rem;
   }
 }
+
+/* The note under every page. */
+
+footer {
+  max-width: 38rem;
+  margin: 5rem auto 0;
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  color: var(--muted);
+}

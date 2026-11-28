@@ -2,6 +2,7 @@
 
 module(name = "benbirt_io")
 
+bazel_dep(name = "aspect_rules_js", version = "3.6.1")
 bazel_dep(name = "platforms", version = "1.1.0")
 
 # Formatting and Starlark lint from benbirt/bazel-style: bazel run
@@ -50,3 +51,25 @@ use_repo(tofu, "tofu_toolchains")
 tf_providers = use_extension("@rules_tofu//tf/providers:extensions.bzl", "tf_providers")
 tf_providers.from_lock(lock_file = "//infra:.terraform.lock.hcl")
 use_repo(tf_providers, "tf_providers")
+
+# The site's one npm dependency, posthog-js, loaded by site/static/analytics.js
+# to count visits. It is pinned in package.json and pnpm-lock.yaml so
+# Dependabot can update it. To change the version by hand:
+#   bazel run -- @pnpm//:pnpm --dir $PWD add --save-exact --lockfile-only posthog-js@<version>
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm", dev_dependency = True)
+pnpm.pnpm(pnpm_version_from = "//:package.json")
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+npm.npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+
+# rules_js drops documentation from packages, licences included. Keep the
+# whole of posthog-js, so that its licence can be served with it.
+npm.npm_exclude_package_contents(
+    package = "posthog-js",
+    presets = [],
+)
+use_repo(npm, "npm")

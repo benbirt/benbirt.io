@@ -1,9 +1,9 @@
 # Weekly version updates, one pull request per ecosystem.
 #
-# Not covered: .bazelversion and the bazel_dep versions in MODULE.bazel, which
-# bazel-updates.yaml advances (Dependabot cannot evaluate a MODULE.bazel whose
-# extensions read files it does not fetch, as rules_js does), and Zola, which
-# has its own workflow (update-zola.yml).
+# Not covered here: .bazelversion and the modules in MODULE.bazel are updated
+# by bazel-updates.yaml. Dependabot cannot evaluate a MODULE.bazel whose
+# extensions read files it does not fetch, as rules_tofu and aspect_rules_js
+# do. Zola is updated by update-zola.yml.
 version: 2
 updates:
   # The Cloudflare provider: its version in infra/main.tf and the lock beside
@@ -11,6 +11,13 @@ updates:
   # "opentofu", not "terraform", which can't read an OpenTofu lock.
   - package-ecosystem: opentofu
     directory: /infra
+    schedule:
+      interval: weekly
+
+  # posthog-js in package.json and pnpm-lock.yaml, read by aspect_rules_js
+  # through npm_translate_lock in MODULE.bazel.
+  - package-ecosystem: npm
+    directory: /
     schedule:
       interval: weekly
 

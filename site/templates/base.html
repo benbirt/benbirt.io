@@ -45,8 +45,17 @@
           href="{{ get_url(path='atom.xml') }}">
     <link rel="stylesheet"
           href="{{ get_url(path='style.css', cachebust=true) }}">
+    <script type="module"
+            src="{{ get_url(path='analytics.js', cachebust=true) }}"></script>
   </head>
   <body>
     {% block body %}{% endblock %}
+    <footer>
+      <p>
+        This site counts visits with <a href="https://posthog.com/">PostHog</a>,
+        without cookies or browser storage. Do Not Track and Global Privacy
+        Control turn this off.
+      </p>
+    </footer>
   </body>
 </html>
