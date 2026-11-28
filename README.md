@@ -69,23 +69,33 @@ dependency.
 Every push to `main` builds the site and deploys it to GitHub Pages
 ([`pages.yml`](.github/workflows/pages.yml)).
 
-## DNS and email
+## Infrastructure
 
-The domain's DNS records and its email routing (`ben@benbirt.io`) are OpenTofu
-configuration in [`infra/`](infra/), run through
+The domain's DNS records, its email routing (`ben@benbirt.io`) and a PostHog
+dashboard are OpenTofu configuration in [`infra/`](infra/), run through
 [rules_tofu](https://github.com/benbirt/rules_tofu):
 
 ```sh
 bazel build //infra    # validates the configuration; needs no credentials
-infra/run.sh plan      # plans from termina, with the token from KDE Wallet
+infra/run.sh plan      # plans from termina, with the keys from KDE Wallet
 ```
 
 CI plans on pull requests that change `infra/` and applies on pushes to `main`
 ([`infra.yml`](.github/workflows/infra.yml)). State is in the Cloudflare R2
-bucket `benbirt-io-tofu-state`.
+bucket `benbirt-io-tofu-state`. The bucket also holds the state of
+tlog-viewer's dashboard, under a key of its own.
 
-One Cloudflare token serves all of it: an account-owned API token,
-`benbirt-io-tofu` (Manage account > Account API tokens), with three policies:
+The PostHog dashboard ([`infra/posthog.tf`](infra/posthog.tf)) is "benbirt.io
+visits". The site sends to PostHog's EU project 306168, shared with
+`eavesbard.com` and `tlog.benbirt.io`, whose dashboards are in
+[benbirt/eavesbard](https://github.com/benbirt/eavesbard) and
+[benbirt/tlog-viewer](https://github.com/benbirt/tlog-viewer). Every insight
+filters on `$host`, so the dashboard shows this site only. The dashboard or an
+insight changed in PostHog's UI is put back by the next apply.
+
+One Cloudflare token covers everything in Cloudflare, including the state
+bucket: an account-owned API token, `benbirt-io-tofu` (Manage account > Account
+API tokens), with three policies:
 
 | Scope                                 | Permissions                                                                                                                                                        |
 | ------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -98,10 +108,15 @@ The `cloudflare` provider uses the token as it is. For the state bucket,
 Cloudflare's rule (the access key ID is the token's ID, the secret the SHA-256
 of the token), so there are no separate R2 keys to keep.
 
-The token is the repository secret `CLOUDFLARE_API_TOKEN` (for Actions, and
-again for Dependabot, for its provider updates). `infra/run.sh` reads it from
-KDE Wallet, where this stores it:
+The `posthog` provider uses a personal API key limited to project 306168, with
+write access to dashboards and insights. It is the same key eavesbard's
+configuration uses (labelled `eavesbard-config` in PostHog).
+
+Both are repository secrets (`CLOUDFLARE_API_TOKEN` and `POSTHOG_API_KEY`),
+for Actions and again for Dependabot (for its provider updates). `infra/run.sh`
+reads them from KDE Wallet, where these store them:
 
 ```sh
 nix shell nixpkgs#libsecret --command secret-tool store --label="Cloudflare benbirt-io-tofu" service cloudflare token benbirt-io-tofu
+nix shell nixpkgs#libsecret --command secret-tool store --label="PostHog eavesbard-config" service posthog project 306168
 ```

@@ -1,10 +1,10 @@
 name: Infra
 
-# Keeps the domain's DNS records and email routing in line with infra/: plans
-# on pull requests that change it, applies on pushes to main. State is in
-# Cloudflare R2, locked while a run uses it. Dependabot's pull requests get the
-# same secrets from the repository's Dependabot secrets, so its provider
-# updates are planned too.
+# Keeps the domain's DNS records, its email routing and the PostHog dashboard
+# in line with infra/: plans on pull requests that change it, applies on
+# pushes to main. State is in Cloudflare R2, locked while a run uses it.
+# Dependabot's pull requests get the same secrets from the repository's
+# Dependabot secrets, so its provider updates are planned too.
 
 on:
   push:
@@ -46,6 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      POSTHOG_API_KEY: ${{ secrets.POSTHOG_API_KEY }}
     steps:
       - uses: actions/checkout@v7
       # The state bucket's S3 keys, derived from the Cloudflare token and
