@@ -84,18 +84,20 @@ A visit is not counted when the host is not `benbirt.io`, the browser is
 automated (`navigator.webdriver`), Do Not Track is `"1"`, or Global Privacy
 Control is on. In those cases PostHog's SDK is not fetched.
 
-Bazel downloads the `posthog-js` npm archive pinned in
-[`MODULE.bazel`](MODULE.bazel), and [`site/BUILD.bazel`](site/BUILD.bazel)
-copies `dist/module.no-external.js` to `/posthog.js` with its licence at
-`/posthog-LICENSE.txt`. That file is about 440 kB. It is the one file in the
-package that needs no others and loads nothing from PostHog's servers.
-`bazel run //site:public` serves the source tree without `/posthog.js`, which
-does not matter because previews are never counted.
+`posthog-js` is an npm dependency in [`package.json`](package.json) and
+[`pnpm-lock.yaml`](pnpm-lock.yaml), fetched by Bazel through `aspect_rules_js`.
+Install scripts are disabled in [`pnpm-workspace.yaml`](pnpm-workspace.yaml).
+[`site/BUILD.bazel`](site/BUILD.bazel) copies `dist/module.no-external.js` to
+`/posthog.js` with its licence at `/posthog-LICENSE.txt`. That file is about
+440 kB. It is the one file in the package that needs no others and loads
+nothing from PostHog's servers. The site needs no Node at run time and has no
+other JavaScript build step. `bazel run //site:public` serves the source tree
+without `/posthog.js`, which does not matter because previews are never
+counted.
 
-[`tools/posthog/update.sh`](tools/posthog/update.sh) points `MODULE.bazel` at
-the latest `posthog-js` on npm, using `curl` and `jq`. A monthly workflow
-([`update-posthog.yml`](.github/workflows/update-posthog.yml)) runs it and
-opens a pull request, since `posthog-js` is released several times a week.
+Dependabot ([`dependabot.yml`](.github/dependabot.yml)) opens weekly pull
+requests for `posthog-js`. They are not merged automatically. To change the
+version by hand, use the `pnpm` command in [`MODULE.bazel`](MODULE.bazel).
 
 ## DNS and email
 

@@ -1,0 +1,4 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+# Links posthog-js from pnpm-lock.yaml so //site:posthog can copy out its SDK.
+npm_link_all_packages(name = "node_modules")

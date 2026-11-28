@@ -2,6 +2,7 @@
 
 module(name = "benbirt_io")
 
+bazel_dep(name = "aspect_rules_js", version = "3.6.1")
 bazel_dep(name = "platforms", version = "1.1.0")
 
 # Formatting and Starlark lint from benbirt/bazel-style: bazel run
@@ -37,20 +38,6 @@ http_archive = use_repo_rule("@bazel_tools//tools/build_defs/repo:http.bzl", "ht
     ]
 ]
 
-# PostHog's browser SDK, loaded by site/static/analytics.js to count visits.
-# dist/module.no-external.js is the one file in the package that needs no
-# others and loads nothing remotely. The version and integrity are kept up to
-# date by tools/posthog/update.sh, which a monthly workflow runs.
-POSTHOG_JS_VERSION = "1.455.4"
-
-http_archive(
-    name = "posthog_js",
-    build_file_content = 'exports_files(["dist/module.no-external.js", "LICENSE"])',
-    integrity = "sha512-CTuF1QH/Xa2hBjrfH7YABVE+vrB5u9WaFR1hicJ5bPJvRZZFSgyyNoQULGY+8cSVNqcDQIE6O31+b1Iwyd9++w==",
-    strip_prefix = "package",
-    url = "https://registry.npmjs.org/posthog-js/-/posthog-js-{v}.tgz".format(v = POSTHOG_JS_VERSION),
-)
-
 # The domain's DNS and email routing as OpenTofu (infra/), through rules_tofu.
 bazel_dep(name = "rules_tofu", version = "0.7.0")
 
@@ -64,3 +51,25 @@ use_repo(tofu, "tofu_toolchains")
 tf_providers = use_extension("@rules_tofu//tf/providers:extensions.bzl", "tf_providers")
 tf_providers.from_lock(lock_file = "//infra:.terraform.lock.hcl")
 use_repo(tf_providers, "tf_providers")
+
+# The site's one npm dependency, posthog-js, loaded by site/static/analytics.js
+# to count visits. It is pinned in package.json and pnpm-lock.yaml so
+# Dependabot can update it. To change the version by hand:
+#   bazel run -- @pnpm//:pnpm --dir $PWD add --save-exact --lockfile-only posthog-js@<version>
+pnpm = use_extension("@aspect_rules_js//npm:extensions.bzl", "pnpm", dev_dependency = True)
+pnpm.pnpm(pnpm_version_from = "//:package.json")
+use_repo(pnpm, "pnpm")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm", dev_dependency = True)
+npm.npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+
+# rules_js drops documentation from packages, licences included. Keep the
+# whole of posthog-js, so that its licence can be served with it.
+npm.npm_exclude_package_contents(
+    package = "posthog-js",
+    presets = [],
+)
+use_repo(npm, "npm")
